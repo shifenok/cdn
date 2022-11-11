@@ -41,7 +41,7 @@ jobs:
           npm version patch
           npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           
       # 删除 rawimg/ 和 webpimg/ 下的所有文件
       - name: Delete Files
