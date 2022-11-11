@@ -1,37 +1,30 @@
-name: Next release
+name: NPM & WebP
+
+# 在 Release 发布时 或手动执行
 
 on:
-  push:
-    branches: [ main ]
+  release:
+     types:
+       - published
+
+  workflow_dispatch:
 
 jobs:
-  publish-to-npm:
+  publish-npm:
     runs-on: ubuntu-latest
+    # Clone 仓库
     steps:
-      - name: Checkout release branch code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 1
-
-      - name: Get yarn cache
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Cache dependencies
-        uses: actions/cache@v1.2.0
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+          ref: main
+      # 安装 Node.js    
+      - name: Setup Node
+        uses: actions/setup-node@v1
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Use Node.js
-        uses: actions/setup-node@v1.4.2
-        with:
-          node-version: 12
-          registry-url: https://registry.npmjs.org
-          
+          node-version: "12.x"
+          registry-url: https://registry.npmjs.org/
+        
       # rawimg/ 作为原始图片存储，webpimg/ 作为压缩图片存储处，最后合并。
       # 安装相关插件，转换图片。
       - name: Install & Convert
@@ -39,7 +32,7 @@ jobs:
           npm install -g webp-batch-convert
           cwebp-batch --in rawimg --out webpimg -q 75 -quiet
           mv webpimg/*.webp rawimg/
-
+          
       # 发布 NPM 包
       - name: Publish Package
         run: |
@@ -48,7 +41,7 @@ jobs:
           npm version patch
           npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
           
       # 删除 rawimg/ 和 webpimg/ 下的所有文件
       - name: Delete Files
