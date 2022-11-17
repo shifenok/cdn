@@ -1,4 +1,5 @@
-# 访问
+# github + actions + npm 上传图片github通过action自动打包发布到npm 通过cdn访问
+## 访问
 ```shell
 https://cdn.jsdelivr.net/npm/[package-name]@[version]/rawimg/[filename].[suffix]
 
