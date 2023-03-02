@@ -32,11 +32,11 @@ jobs:
         
       # rawimg/ 作为原始图片存储，webpimg/ 作为压缩图片存储处，最后合并。
       # 安装相关插件，转换图片。
+      # npm install -g webp-batch-convert
+      # cwebp-batch --in rawimg --out webpimg -q 75 -quiet
       - name: Install & Convert
         run: |
-          npm install -g webp-batch-convert
-          cwebp-batch --in rawimg --out webpimg -q 75 -quiet
-          mv webpimg/*.webp rawimg/
+          cp webpimg/* rawimg/
           
       # 发布 NPM 包
       - name: Publish Package
