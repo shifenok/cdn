@@ -34,9 +34,10 @@ jobs:
       # 安装相关插件，转换图片。
       # npm install -g webp-batch-convert
       # cwebp-batch --in rawimg --out webpimg -q 75 -quiet
+      # mv webpimg/* rawimg/
       - name: Install & Convert
         run: |
-          cp webpimg/* rawimg/
+          cp rawimg/* webpimg/
           
       # 发布 NPM 包
       - name: Publish Package
